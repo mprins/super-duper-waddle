@@ -34,7 +34,6 @@ services:
 before_install:
   - export PAGER=cat
   - echo $JAVA_HOME
-  - java -v  
 
 install: true
 
