@@ -6,7 +6,7 @@ jdk:
   - oraclejdk8
   - openjdk8
   - oraclejdk9
-  
+
 os:
   - linux
 
@@ -17,28 +17,15 @@ matrix:
       sudo: required
       group: edge
       jdk: ibmjava8
-      
-addons:
-  hostname: flamingo
-  hosts:
-    - flamingo
-  apt:
-    packages:
-      - haveged
-      - git-lfs
 
 services:
   - haveged
 
-before_install:
-  - export PAGER=cat
-  - echo $JAVA_HOME
-  - ls -l /usr/lib/jvm/java-8-ibm/bin
-  - ls -l $JAVA_HOME/bin
-
 install: true
 
 script:
+  - echo $JAVA_HOME
+  - ls -l $JAVA_HOME
   - which java
   - which javac
   - mvn -v
