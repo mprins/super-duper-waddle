@@ -1,43 +1,23 @@
 dist: trusty
-sudo: false
+sudo: required
 language: java
 
 jdk:
-  - oraclejdk8
   - openjdk8
-  #- oraclejdk9
 
 os:
   - linux
 
 matrix:
   fast_finish: true
-  include:
-    - os: linux
-      sudo: required
-      env: DOCKERIZED_JAVA=TRUE
-      services: 
-        - docker
-        - haveged
+
       
-
-services:
-  - haveged
-
 install: true
 
 script:
-  - ls -la /usr/lib/jvm
-  - echo $JAVA_HOME
-  - ls -l $JAVA_HOME
-  - which java
-  - which javac
-  - java -version
-  - if [ "$DOCKERIZED_JAVA" == "TRUE" ] ; then
-          echo "using dockerized maven";
-          docker pull maven:3.5.2-ibmjava-8;
-          docker run -it --rm --volume "$PWD"/pom.xml://usr/src/app/pom.xml --volume "$HOME"/.m2:/root/.m2 maven:3.5.2-ibmjava-8 mvn -v clean;
-    else
-          echo "using default maven";
-          mvn -v clean;
-    fi
+# load pki o G2/G3 certs
+  - wget http://cert.pkioverheid.nl/RootCA-G3.cer
+  - sudo keytool -importcert -file ./RootCA-G3.cer -alias G3 -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass 'changeit' -v -noprompt -trustcacerts
+  - wget http://cert.pkioverheid.nl/RootCA-G2.cer
+  - sudo keytool -importcert -file ./RootCA-G2.cer -alias G2 -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass 'changeit' -v -noprompt -trustcacerts
+
